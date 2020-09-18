@@ -45,6 +45,31 @@ class UserController {
       message: 'OK!'
     });
   };
+
+  static logIn: THandler = async (req, res) => {
+    const { username, password } = req.body;
+
+    const user = await UserService.logIn(username, password);
+    const token = JWT.generateToken({ user: { id: user._id } });
+
+    return res.status(OK).json({
+      statusCode: OK,
+      data: token,
+      message: 'Ok!'
+    });
+  };
+
+  static updateUser: THandler = async (req, res) => {
+    const user = await UserService.update(req.user.id, req.body);
+
+    return res.status(OK).json({
+      statusCode: OK,
+      data: user,
+      message: 'Ok!'
+    });
+  };
+
+  static deleteUser: THandler = async (req, res) => {};
 }
 
 export default UserController;

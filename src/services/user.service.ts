@@ -58,9 +58,12 @@ class UserService {
     return user;
   }
 
-  static async logIn(email: string, password: string) {
+  static async logIn(username: string, password: string) {
     const user = await this.userModel.findOne({
-      $and: [{ email }, { stateUser: StateUser.ACTIVE }]
+      $or: [
+        { $and: [{ email: username }, { stateUser: StateUser.ACTIVE }] },
+        { $and: [{ username }, { stateUser: StateUser.ACTIVE }] }
+      ]
     });
 
     if (!user) throw new ErrorHandler(NOT_FOUND, 'Invalid credentials');
